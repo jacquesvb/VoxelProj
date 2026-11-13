@@ -1,9 +1,7 @@
-#ifndef EBO_CLASS_H
-#define EBO_CLASS_H
+#ifndef EBO_H
+#define EBO_H
 
 #include<glad/glad.h>
-#include<vector>
-
 
 class EBO
 {
@@ -11,7 +9,7 @@ class EBO
         // ID reference of Elements Buffer Object
         GLuint ID;
         // Constructor that generates a Elements Buffer Object and links it to indices
-        EBO(const std::vector<GLuint>& indices);
+        EBO(GLuint* indices, GLsizeiptr size);
 
         // Binds the EBO
         void Bind();

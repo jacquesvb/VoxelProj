@@ -4,6 +4,9 @@
 #include <GLFW/glfw3.h>
 
 #include "shader.h"
+#include "VAO.h"
+#include "VBO.h"
+#include "EBO.h"
 
 #ifndef RESOURCES_PATH
 #define RESOURCES_PATH "resources/"
@@ -19,7 +22,8 @@ int main()
 	};
 
 	GLuint indices[] = {
-		0, 1, 2
+		0, 1, 2,
+		0, 2, 3
 	};
 
 	glfwInit();
@@ -47,31 +51,23 @@ int main()
 		return -1;
 	}
 
-	const std::string vertexPath = std::string(RESOURCES_PATH) + "default.vert";
-	const std::string fragmentPath = std::string(RESOURCES_PATH) + "default.frag";
-	Shader shaderProgram(vertexPath.c_str(), fragmentPath.c_str());
+	gladLoadGL();
+
+	Shader shaderProgram("resources/default.vert", "resources/default.frag");
 	
-	glViewport(0, 0, 800, 600);
-	
-	GLuint VBO, VAO, EBO;
-	glGenVertexArrays(1, &VAO);
-	glBindVertexArray(VAO);
+	glViewport(0, 0, 800, 800);
 
-	glGenBuffers(1, &VBO);
-	glGenBuffers(1, &EBO);
+	VAO VAO1;
+	VAO1.Bind();
 
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	VBO VBO1(vertices, sizeof(vertices));
+	EBO EBO1(indices, sizeof(indices));
 
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+	VAO1.LinkVBO(VBO1, 0);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
-	glEnableVertexAttribArray(0);
-
-	// Unbind VAO first so the EBO binding remains associated with it.
-	glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	VAO1.Unbind();
+	VBO1.Unbind();
+	EBO1.Unbind();
 
 	while(!glfwWindowShouldClose(window))
 	{
@@ -82,20 +78,21 @@ int main()
 
 		// Tell OpenGL which Shader Program we want to use
 		shaderProgram.Activate();
-
-		
-		glBindVertexArray(VAO);
-		glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
+		VAO1.Bind();
+		glDrawArrays(GL_TRIANGLES, 0, 3);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
 
+	// Delete GL objects while the context still exists, then tear down GLFW
+	VAO1.Delete();
+	VBO1.Delete();
+	EBO1.Delete();
 	shaderProgram.Delete();
-	glDeleteVertexArrays(1, &VAO);
-	glDeleteBuffers(1, &VBO);
-	glDeleteBuffers(1, &EBO);
+
 	glfwDestroyWindow(window);
 	glfwTerminate();
+	
 	return 0;
 }

@@ -1,16 +1,8 @@
-#ifndef VBO_CLASS_H
-#define VBO_CLASS_H
+#ifndef VBO_H
+#define VBO_H
 
 
 #include<glad/glad.h>
-#include<vector>
-
-struct Vertex
-{
-    GLfloat position[3];
-    GLfloat texCoords[2];
-};
-
 
 class VBO
 {
@@ -18,8 +10,7 @@ class VBO
         // Reference ID of the Vertex Buffer Object
         GLuint ID;
         // Constructor that generates a Vertex Buffer Object and links it to vertices
-        VBO(const std::vector<Vertex>& vertices);
-
+        VBO(GLfloat* vertices, GLsizeiptr size);
         // Binds the VBO
         void Bind();
         // Unbinds the VBO

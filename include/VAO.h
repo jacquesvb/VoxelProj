@@ -1,5 +1,5 @@
-#ifndef VAO_CLASS_H
-#define VAO_CLASS_H
+#ifndef VAO_H
+#define VAO_H
 
 #include<glad/glad.h>
 #include"VBO.h"
@@ -14,9 +14,7 @@ class VAO
         VAO();
 
         // Links a VBO Attribute such as a position or color to the VAO
-        void LinkAttrib(VBO& VBO, GLuint layout, GLuint numComponents, GLenum type, GLsizeiptr stride, void* offset);
-        // Links an integer VBO Attribute such as a position or color to the VAO
-        void LinkIntAttrib(VBO& VBO, GLuint layout, GLuint numComponents, GLenum type, GLsizeiptr stride, void* offset);
+        void LinkVBO(VBO& VBO, GLuint layout);
         // Bidns the VAO
         void Bind();
         // Unbinds teh VAO
