@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.16)
 # Some third-party libraries (for example gl2d) still use an older minimum.
 set(CMAKE_POLICY_VERSION_MINIMUM 3.5 CACHE STRING "" FORCE)
 
-project(mygame)
+project(voxelproj)
 
 set(CMAKE_CXX_STANDARD 17)
 
